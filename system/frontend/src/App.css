@@ -1,17 +1,32 @@
 :root {
-  --ink: #16251f;
-  --muted: #748078;
-  --line: #dfe5dc;
+  --ink: #172b3a;
+  --muted: #6d7f8d;
+  --line: #dce8f0;
   --paper: #fff;
-  --mint: #cfead7;
-  --green: #17744c;
+  --page: #fff;
+  --soft: #f3f8fc;
+  --blue: #2d8edb;
+  --blue-soft: #e6f3fc;
   --red: #bd4d4d;
+}
+
+[data-theme='dark'] {
+  --ink: #e7f2f9;
+  --muted: #9aabb7;
+  --line: #29404f;
+  --paper: #152532;
+  --page: #0d1b25;
+  --soft: #203542;
+  --blue: #69b9ee;
+  --blue-soft: #1d4865;
+  --red: #f08a8a;
 }
 
 /* Application shell and navigation */
 .app-shell {
   min-height: 100vh;
-  background: radial-gradient(circle at 90% 0%, #e8f1df 0, transparent 30%), #f4f6f1;
+  background: radial-gradient(circle at 90% 0%, #eaf6ff 0, transparent 30%), var(--page);
+  color: var(--ink);
 }
 
 .topbar {
@@ -21,7 +36,7 @@
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.72);
+  background: color-mix(in srgb, var(--paper) 88%, transparent);
 }
 
 .brand {
@@ -41,8 +56,8 @@
   width: 29px;
   height: 29px;
   border-radius: 9px;
-  background: var(--ink);
-  color: #d3f0d9;
+  background: var(--blue);
+  color: #fff;
   font: 15px 'DM Mono';
 }
 
@@ -56,13 +71,24 @@
   text-transform: uppercase;
 }
 
+.theme-toggle {
+  margin-left: 6px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 7px 10px;
+  background: var(--paper);
+  color: var(--blue);
+  font-size: 10px;
+  font-weight: 700;
+}
+
 .connection-dot,
 .mini-dot {
   display: inline-block;
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: #4eaf79;
+  background: var(--blue);
 }
 
 .topbar-divider {
@@ -87,7 +113,7 @@
 
 .eyebrow {
   margin: 0 0 11px;
-  color: var(--green);
+  color: var(--blue);
   font: 500 11px 'DM Mono';
   letter-spacing: 1.2px;
   text-transform: uppercase;
@@ -120,7 +146,7 @@
 }
 
 .button-primary {
-  background: var(--ink);
+  background: var(--blue);
   color: #fff;
   box-shadow: 0 8px 18px rgba(22, 37, 31, 0.14);
 }
@@ -133,13 +159,44 @@
 }
 
 .button-quiet {
-  background: #eef1ed;
+  background: var(--soft);
   color: var(--ink);
 }
 
 .button-danger {
   background: #c85050;
   color: #fff;
+}
+
+[data-theme='dark'] .app-shell {
+  background: radial-gradient(circle at 90% 0%, #183c54 0, transparent 30%), var(--page);
+}
+
+[data-theme='dark'] .topbar {
+  background: rgba(21, 37, 50, 0.88);
+}
+
+[data-theme='dark'] .search-box input,
+[data-theme='dark'] .field input,
+[data-theme='dark'] .field textarea,
+[data-theme='dark'] .field select,
+[data-theme='dark'] .refresh-button {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+[data-theme='dark'] .error-banner {
+  border-color: #714444;
+  background: #392426;
+}
+
+[data-theme='dark'] .modal-backdrop {
+  background: rgba(3, 12, 18, 0.72);
+}
+
+[data-theme='dark'] .modal,
+[data-theme='dark'] .confirm-modal {
+  background: var(--paper);
 }
 
 /* Summary cards */
@@ -158,8 +215,8 @@
 }
 
 .stat-highlight {
-  border-color: #bde0c6;
-  background: var(--mint);
+  border-color: #b9ddf5;
+  background: var(--blue-soft);
 }
 
 .stat-label {
@@ -271,8 +328,8 @@
 }
 
 .filter.active {
-  background: #eaf2e9;
-  color: var(--green);
+  background: var(--blue-soft);
+  color: var(--blue);
   font-weight: 700;
 }
 
@@ -337,8 +394,8 @@ td {
   width: 33px;
   height: 33px;
   border-radius: 50%;
-  background: #e7f1e8;
-  color: var(--green);
+  background: var(--blue-soft);
+  color: var(--blue);
   font-weight: 800;
 }
 
@@ -354,8 +411,8 @@ td {
 }
 
 .status-active {
-  background: #e3f2e6;
-  color: #24754c;
+  background: #e6f3fc;
+  color: #2474a5;
 }
 
 .status-inactive {
@@ -372,7 +429,7 @@ td {
   border: 0;
   padding: 0;
   background: none;
-  color: var(--green);
+  color: var(--blue);
   font-size: 11px;
 }
 
@@ -401,7 +458,7 @@ td {
 }
 
 .empty-mark {
-  color: var(--green);
+  color: var(--blue);
   font: 20px 'DM Mono';
 }
 
@@ -410,8 +467,8 @@ td {
   width: 15px;
   height: 15px;
   margin-right: 8px;
-  border: 2px solid #d5e4d8;
-  border-top-color: var(--green);
+  border: 2px solid #d7eaf7;
+  border-top-color: var(--blue);
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
   vertical-align: -3px;
@@ -499,7 +556,7 @@ footer {
   height: 29px;
   border: 0;
   border-radius: 50%;
-  background: #eef1ed;
+  background: var(--soft);
   color: var(--muted);
   font-weight: 700;
 }
