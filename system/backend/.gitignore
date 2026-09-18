@@ -1,0 +1,29 @@
+# Build output
+bin/
+obj/
+
+# Visual Studio and VS Code local files
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vscode/
+
+# Test and coverage output
+TestResults/
+coverage/
+
+# Local environment and secret files
+.env
+.env.*
+!.env.example
+appsettings.Local.json
+appsettings.*.local.json
+secrets.json
+
+# Runtime and local database files
+*.db
+*.db-shm
+*.db-wal
+*.log
