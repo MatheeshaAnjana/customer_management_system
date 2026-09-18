@@ -5,10 +5,11 @@ import CustomerStats from './components/CustomerStats'
 import CustomerToolbar from './components/CustomerToolbar'
 import DeleteConfirmation from './components/DeleteConfirmation'
 import ErrorBanner from './components/ErrorBanner'
+import LoginPage from './components/LoginPage'
 import { useCustomers } from './hooks/useCustomers'
 import './App.css'
 
-function AppHeader({ theme, onToggleTheme }) {
+function AppHeader({ theme, onToggleTheme, onLogout }) {
   return (
     <header className="topbar">
       <a className="brand" href="/" aria-label="Clientory home">
@@ -23,6 +24,7 @@ function AppHeader({ theme, onToggleTheme }) {
         <button className="theme-toggle" type="button" onClick={onToggleTheme} aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}>
           {theme === 'light' ? 'Dark' : 'Light'} mode
         </button>
+        <button className="logout-button" type="button" onClick={onLogout}>Sign out</button>
       </div>
     </header>
   )
@@ -68,14 +70,13 @@ function AppFooter() {
   return <footer><span>Clientory CRM</span><span>Customer data, made useful.</span></footer>
 }
 
-function App() {
+function Dashboard({ theme, onToggleTheme, onLogout }) {
   const { customers, isLoading, isSaving, error, loadCustomers, saveCustomer, deleteCustomer } = useCustomers()
   const [query, setQuery] = useState('')
   const [statusFilter, setStatusFilter] = useState('all')
   const [formOpen, setFormOpen] = useState(false)
   const [editingCustomer, setEditingCustomer] = useState(null)
   const [deleteTarget, setDeleteTarget] = useState(null)
-  const [theme, setTheme] = useState(() => localStorage.getItem('clientory-theme') || 'light')
 
   const visibleCustomers = useMemo(() => customers.filter((customer) => {
     const searchable = `${customer.name} ${customer.email} ${customer.phone}`.toLowerCase()
@@ -104,15 +105,9 @@ function App() {
     setDeleteTarget(null)
   }
 
-  const toggleTheme = () => {
-    const nextTheme = theme === 'light' ? 'dark' : 'light'
-    setTheme(nextTheme)
-    localStorage.setItem('clientory-theme', nextTheme)
-  }
-
   return (
     <div className="app-shell" data-theme={theme}>
-      <AppHeader theme={theme} onToggleTheme={toggleTheme} />
+      <AppHeader theme={theme} onToggleTheme={onToggleTheme} onLogout={onLogout} />
       <main className="main-content">
         <PageHeading onAddCustomer={openCreateForm} />
         <CustomerStats total={customers.length} active={activeCount} />
@@ -135,6 +130,33 @@ function App() {
       <DeleteConfirmation customer={deleteTarget} onCancel={() => setDeleteTarget(null)} onConfirm={handleDelete} />
     </div>
   )
+}
+
+function App() {
+  const [theme, setTheme] = useState(() => localStorage.getItem('clientory-theme') || 'light')
+  const [isAuthenticated, setIsAuthenticated] = useState(() => localStorage.getItem('clientory-authenticated') === 'true')
+
+  const toggleTheme = () => {
+    const nextTheme = theme === 'light' ? 'dark' : 'light'
+    setTheme(nextTheme)
+    localStorage.setItem('clientory-theme', nextTheme)
+  }
+
+  const handleLogin = () => {
+    localStorage.setItem('clientory-authenticated', 'true')
+    setIsAuthenticated(true)
+  }
+
+  const handleLogout = () => {
+    localStorage.removeItem('clientory-authenticated')
+    setIsAuthenticated(false)
+  }
+
+  if (!isAuthenticated) {
+    return <div className="app-shell" data-theme={theme}><LoginPage theme={theme} onToggleTheme={toggleTheme} onLogin={handleLogin} /></div>
+  }
+
+  return <Dashboard theme={theme} onToggleTheme={toggleTheme} onLogout={handleLogout} />
 }
 
 export default App

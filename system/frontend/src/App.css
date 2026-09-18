@@ -82,6 +82,19 @@
   font-weight: 700;
 }
 
+.logout-button {
+  border: 0;
+  padding: 7px 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.logout-button:hover {
+  color: var(--blue);
+}
+
 .connection-dot,
 .mini-dot {
   display: inline-block;
@@ -197,6 +210,100 @@
 [data-theme='dark'] .modal,
 [data-theme='dark'] .confirm-modal {
   background: var(--paper);
+}
+
+/* Login screen */
+.login-page {
+  position: relative;
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+  overflow: hidden;
+  padding: 24px;
+  background: var(--page);
+}
+
+.login-background {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 15% 20%, #e8f6ff 0, transparent 31%), radial-gradient(circle at 90% 85%, #f0f8fd 0, transparent 28%);
+  pointer-events: none;
+}
+
+.login-card {
+  position: relative;
+  width: min(430px, 100%);
+  padding: 31px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--paper);
+  box-shadow: 0 22px 60px rgba(46, 111, 150, 0.1);
+}
+
+.login-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 57px;
+}
+
+.login-copy {
+  margin-bottom: 28px;
+}
+
+.login-copy h1 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 32px;
+  letter-spacing: -1.5px;
+}
+
+.login-copy p:last-child {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.login-form {
+  display: grid;
+  gap: 17px;
+}
+
+.login-submit {
+  width: 100%;
+  margin-top: 5px;
+  padding: 13px;
+}
+
+.login-error {
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid #eccaca;
+  border-radius: 5px;
+  background: #fff7f6;
+  color: var(--red);
+  font-size: 11px;
+}
+
+.login-footer {
+  margin: 26px 0 0;
+  color: var(--muted);
+  font: 10px 'DM Mono';
+  text-align: center;
+  text-transform: uppercase;
+}
+
+[data-theme='dark'] .login-background {
+  background: radial-gradient(circle at 15% 20%, #183c54 0, transparent 31%), radial-gradient(circle at 90% 85%, #142d3d 0, transparent 28%);
+}
+
+[data-theme='dark'] .login-card {
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.24);
+}
+
+[data-theme='dark'] .login-error {
+  border-color: #714444;
+  background: #392426;
 }
 
 /* Summary cards */
