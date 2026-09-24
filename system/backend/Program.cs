@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddCors(options => options.AddPolicy("Frontend", policy =>
-    policy.WithOrigins("http://localhost:5173")
+    policy.WithOrigins("http://localhost:5173", "http://localhost:4200")
         .AllowAnyHeader()
         .AllowAnyMethod()));
 builder.Services.AddDbContext<CustomerDbContext>(options =>
