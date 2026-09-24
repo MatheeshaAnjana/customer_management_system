@@ -1,181 +1,86 @@
 # Customer Management System
 
-A customer management system built with React, ASP.NET Core, Entity Framework Core, and SQL Server.
+A customer management app with a .NET backend and two frontend implementations: a React version and an Angular version.
+
+## Stack
+
+- Backend: ASP.NET Core Web API (.NET 9)
+- Frontend A: React + Vite
+- Frontend B: Angular 19
+- Database: SQL Server + Entity Framework Core
+- Styling: Custom CSS with responsive layouts and light/dark themes
 
 ## Features
 
 - Admin login screen
-- Customer dashboard with summary statistics
-- Create, view, edit, and delete customers
-- Search customers by name, email, or phone
-- Filter customers by active or inactive status
-- Client-side form validation
-- Loading, empty, and API error states
-- Light and dark themes
-- SQL Server persistence through Entity Framework Core
+- Customer dashboard with summary cards
+- Add, edit, delete, search, and filter customers
+- Form validation and status handling
+- Loading, empty, and error states
+- Working with both frontend implementations
 
-## Technology
+## Run locally
 
-- Frontend: React 19, Vite, JavaScript
-- Backend: ASP.NET Core .NET 9 Web API
-- Database: SQL Server with Entity Framework Core 9
-- Styling: CSS with responsive layouts and theme variables
-
-## Prerequisites
-
-- Node.js and npm
-- .NET 9 SDK
-- SQL Server Express or SQL Server
-- SQL Server instance named `MATHEESHA\\SQLEXPRESS`, or a matching connection string
-
-## Database Setup
-
-The default connection is configured in `backend/appsettings.json`:
-
-```json
-"DefaultConnection": "Server=MATHEESHA\\SQLEXPRESS;Database=CustomerManagementDb;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=True"
-```
-
-Update this value if your SQL Server instance uses a different server name, authentication method, or database name.
-
-From the `backend` directory, create or update the database with:
+### Backend
 
 ```powershell
-dotnet ef database update
-```
-
-If the Entity Framework command is not installed, install it once with:
-
-```powershell
-dotnet tool install --global dotnet-ef
-```
-
-## Run the Backend
-
-Open a terminal in the project root and run:
-
-```powershell
-cd backend
+cd system/backend
 dotnet restore
 dotnet run
 ```
 
-The development API runs at:
+API runs at:
+- http://localhost:5063
 
-- HTTP: `http://localhost:5063`
-- HTTPS: `https://localhost:7170`
-
-OpenAPI is available in development mode at:
-
-```text
-http://localhost:5063/openapi/v1.json
-```
-
-## Run the Frontend
-
-Open a second terminal in the project root and run:
+### React frontend
 
 ```powershell
-cd frontend
+cd system/frontend
 npm install
 npm run dev
 ```
 
-The Vite development server normally runs at:
+React app runs at:
+- http://localhost:5173
 
-```text
-http://localhost:5173
+### Angular frontend
+
+```powershell
+cd system/frontend2
+npm install
+npm start
 ```
 
-The frontend uses `http://localhost:5063/api` by default. To use another API URL, create `frontend/.env.local`:
+Angular app runs at:
+- http://localhost:4200
 
-```env
-VITE_API_URL=http://localhost:5063/api
-```
-
-## Admin Login
-
-The current frontend-only demo login is:
+## Demo login
 
 ```text
 Email: admin@gmail.com
 Password: 0000
 ```
 
-Authentication is stored in browser `localStorage` and does not use the database. This is suitable for a local demonstration only. Production authentication should be moved to the backend with hashed passwords, sessions or JWTs, and authorization checks on protected API endpoints.
-
-## API Endpoints
-
-The customer API is available under `/api/Customer`:
-
-| Method | Endpoint | Description |
-| --- | --- | --- |
-| `GET` | `/api/Customer` | Get all customers |
-| `GET` | `/api/Customer/{id}` | Get one customer |
-| `POST` | `/api/Customer` | Create a customer |
-| `PUT` | `/api/Customer/{id}` | Update a customer |
-| `DELETE` | `/api/Customer/{id}` | Delete a customer |
-
-Customer fields:
-
-- `id`
-- `name`
-- `email`
-- `phone`
-- `address`
-- `status`: `active` or `inactive`
-- `createdDate`
-
-Example request body:
-
-```json
-{
-  "name": "Amara Perera",
-  "email": "amara@example.com",
-  "phone": "+94 77 123 4567",
-  "address": "Colombo, Sri Lanka",
-  "status": "active"
-}
-```
-
-## Frontend Commands
-
-Run these commands from `frontend`:
-
-```powershell
-npm run dev       # Start the development server
-npm run build     # Create a production build
-npm run lint      # Run Oxlint
-npm run preview   # Preview the production build
-```
-
-## Project Structure
+## Project structure
 
 ```text
 system/
-|-- backend/
-|   |-- Controller/CustomerController.cs
-|   |-- Data/DbContext.cs
-|   |-- Model/Customer.cs
-|   |-- Migrations/
-|   |-- Program.cs
-|   |-- appsettings.json
-|   `-- backend.csproj
-|-- frontend/
-|   |-- src/
-|   |   |-- api/customerApi.js
-|   |   |-- components/
-|   |   |-- hooks/useCustomers.js
-|   |   |-- App.jsx
-|   |   `-- App.css
-|   |-- package.json
-|   |   `-- vite.config.js
-|   `-- README.md
-`-- README.md
+├─ backend/
+│  ├─ Controller/
+│  ├─ Data/
+│  ├─ Model/
+│  ├─ Migrations/
+│  ├─ Program.cs
+│  ├─ appsettings.json
+│  └─ backend.csproj
+├─ frontend/          # React version
+├─ frontend2/         # Angular version
+├─ README.md
+└─ ...
 ```
 
 ## Notes
 
-- The backend allows requests from `http://localhost:5173` during development.
-- Do not commit real passwords, connection strings, or production secrets.
-- Keep Entity Framework migrations in source control when the database schema changes.
+- Both frontend apps connect to the same backend API.
+- The active Angular UI is currently in `system/frontend2`.
+- Update the connection string in `system/backend/appsettings.json` if your SQL Server instance differs.
