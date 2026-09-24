@@ -17,6 +17,7 @@ public class Customer
 
 	[Required]
 	[MaxLength(30)]
+	[RegularExpression("^[0-9]+$", ErrorMessage = "Phone must contain numbers only.")]
 	public string Phone { get; set; } = string.Empty;
 
 	[Required]

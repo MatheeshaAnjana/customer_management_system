@@ -1,22 +1,285 @@
-<div class="app-shell" [attr.data-theme]="theme">
+﻿<div class="app-shell" [attr.data-theme]="theme">
   <ng-container *ngIf="!isAuthenticated; else dashboard">
-    <main class="login-page"><div class="login-background" aria-hidden="true"></div><section class="login-card" aria-labelledby="login-title">
-      <div class="login-card-header"><a class="brand" href="/" aria-label="Clientory home"><span class="brand-mark">C</span><span>clientory</span></a><button class="theme-toggle" type="button" (click)="toggleTheme()">{{ theme === 'light' ? 'Dark' : 'Light' }} mode</button></div>
-      <div class="login-copy"><p class="eyebrow">Admin workspace</p><h1 id="login-title">Welcome back</h1><p>Sign in to manage your customer relationships.</p></div>
-      <form class="login-form" [formGroup]="loginForm" (ngSubmit)="login()" novalidate><label class="field"><span>Email address</span><input type="email" formControlName="email" placeholder="admin@gmail.com" autocomplete="username" autofocus><small class="field-error" *ngIf="loginForm.controls.email.invalid && loginForm.controls.email.touched">Enter a valid email.</small></label><label class="field"><span>Password</span><input type="password" formControlName="password" placeholder="Enter your password" autocomplete="current-password"></label><p class="login-error" *ngIf="loginError" role="alert">{{ loginError }}</p><button class="button button-primary login-submit" type="submit">Sign in</button></form>
-      <p class="login-footer">Secure access for administrators</p>
-    </section></main>
+    <main class="login-page">
+      <div class="login-background" aria-hidden="true"></div>
+
+      <section class="login-card" aria-labelledby="login-title">
+        <div class="login-card-header">
+          <a class="brand" href="/" aria-label="Clientory home">
+            <span class="brand-mark">C</span>
+            <span>clientory</span>
+          </a>
+
+          <button class="theme-toggle" type="button" (click)="toggleTheme()">
+            {{ theme === 'light' ? 'Dark' : 'Light' }} mode
+          </button>
+        </div>
+
+        <div class="login-copy">
+          <p class="eyebrow">Admin workspace</p>
+          <h1 id="login-title">Welcome back</h1>
+          <p>Sign in to manage your customer relationships.</p>
+        </div>
+
+        <form class="login-form" [formGroup]="loginForm" (ngSubmit)="login()" novalidate>
+          <label class="field">
+            <span>Email address</span>
+            <input type="email" formControlName="email" placeholder="admin@gmail.com" autocomplete="username" autofocus>
+            <small class="field-error" *ngIf="loginForm.controls.email.invalid && loginForm.controls.email.touched">
+              Enter a valid email.
+            </small>
+          </label>
+
+          <label class="field">
+            <span>Password</span>
+            <input type="password" formControlName="password" placeholder="Enter your password" autocomplete="current-password">
+          </label>
+
+          <p class="login-error" *ngIf="loginError" role="alert">{{ loginError }}</p>
+
+          <button class="button button-primary login-submit" type="submit">Sign in</button>
+        </form>
+
+        <p class="login-footer">Secure access for administrators</p>
+      </section>
+    </main>
   </ng-container>
+
   <ng-template #dashboard>
-    <header class="topbar"><a class="brand" href="/" aria-label="Clientory home"><span class="brand-mark">C</span><span>clientory</span></a><div class="topbar-meta"><span class="connection-dot"></span><span>Workspace online</span><span class="topbar-divider"></span><span>Admin view</span><button class="theme-toggle" type="button" (click)="toggleTheme()">{{ theme === 'light' ? 'Dark' : 'Light' }} mode</button><button class="logout-button" type="button" (click)="logout()">Sign out</button></div></header>
-    <main class="main-content"><div class="page-heading"><div><p class="eyebrow">Operations / Directory</p><h1>Customers</h1><p class="subtitle">Keep your customer relationships clear, current, and easy to act on.</p></div><button class="button button-primary" type="button" (click)="openCreateForm()"><span class="plus">+</span> Add customer</button></div>
-      <section class="stats-grid" aria-label="Customer overview"><article class="stat-card"><span class="stat-label">Total customers</span><strong>{{ customers.length }}</strong><span class="stat-note">All records in directory</span></article><article class="stat-card stat-highlight"><span class="stat-label">Active customers</span><strong>{{ activeCount }}</strong><span class="stat-note"><span class="mini-dot"></span> Currently engaged</span></article><article class="stat-card"><span class="stat-label">Inactive customers</span><strong>{{ customers.length - activeCount }}</strong><span class="stat-note">Needs re-engagement</span></article></section>
-      <section class="directory-panel"><div class="panel-heading"><div><h2>Customer directory</h2><p>{{ visibleCustomers.length }} of {{ customers.length }} records showing</p></div><button class="refresh-button" type="button" (click)="loadCustomers()" [disabled]="isLoading">Refresh</button></div>
-        <div class="toolbar"><label class="search-box"><span>/</span><input [(ngModel)]="query" placeholder="Search name, email or phone" aria-label="Search customers"></label><div class="filter-group"><button *ngFor="let filter of ['all', 'active', 'inactive']" class="filter" [class.active]="statusFilter === filter" type="button" (click)="statusFilter = $any(filter)">{{ filter | titlecase }}</button></div></div>
-        <div class="error-banner" *ngIf="error" role="alert"><span>{{ error }}</span><button type="button" (click)="loadCustomers()">Retry</button></div><div class="loading-state" *ngIf="isLoading"><span class="spinner"></span> Loading customers...</div><div class="empty-state" *ngIf="!isLoading && !visibleCustomers.length"><span class="empty-mark">--</span><h3>No customers found</h3><p>Try changing your search or add your first customer.</p></div>
-        <div class="table-wrap" *ngIf="!isLoading && visibleCustomers.length"><table><thead><tr><th>Customer</th><th>Phone</th><th>Address</th><th>Status</th><th>Added</th><th>Actions</th></tr></thead><tbody><tr *ngFor="let customer of visibleCustomers"><td><div class="customer-cell"><span class="avatar">{{ customer.name.slice(0, 1).toUpperCase() }}</span><div><strong>{{ customer.name }}</strong><span>{{ customer.email }}</span></div></div></td><td>{{ customer.phone }}</td><td class="address-cell">{{ customer.address }}</td><td><span class="status" [class.status-active]="customer.status === 'active'" [class.status-inactive]="customer.status === 'inactive'">{{ customer.status }}</span></td><td>{{ formatDate(customer.createdDate) }}</td><td><div class="row-actions"><button type="button" (click)="openEditForm(customer)">Edit</button><button class="danger-link" type="button" (click)="deleteTarget = customer">Delete</button></div></td></tr></tbody></table></div>
-      </section></main><footer><span>Clientory CRM</span><span>Customer data, made useful.</span></footer>
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="Clientory home">
+        <span class="brand-mark">C</span>
+        <span>clientory</span>
+      </a>
+
+      <div class="topbar-meta">
+        <span class="connection-dot"></span>
+        <span>Workspace online</span>
+        <span class="topbar-divider"></span>
+        <span>Admin view</span>
+
+        <button class="theme-toggle" type="button" (click)="toggleTheme()">
+          {{ theme === 'light' ? 'Dark' : 'Light' }} mode
+        </button>
+
+        <button class="logout-button" type="button" (click)="logout()">
+          Sign out
+        </button>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <div class="page-heading">
+        <div>
+          <p class="eyebrow">Operations / Directory</p>
+          <h1>Customers</h1>
+          <p class="subtitle">Keep your customer relationships clear, current, and easy to act on.</p>
+        </div>
+
+        <button class="button button-primary" type="button" (click)="openCreateForm()">
+          <span class="plus">+</span>
+          Add customer
+        </button>
+      </div>
+
+      <section class="stats-grid" aria-label="Customer overview">
+        <article class="stat-card">
+          <span class="stat-label">Total customers</span>
+          <strong>{{ customers.length }}</strong>
+          <span class="stat-note">All records in directory</span>
+        </article>
+
+        <article class="stat-card stat-highlight">
+          <span class="stat-label">Active customers</span>
+          <strong>{{ activeCount }}</strong>
+          <span class="stat-note">
+            <span class="mini-dot"></span>
+            Currently engaged
+          </span>
+        </article>
+
+        <article class="stat-card">
+          <span class="stat-label">Inactive customers</span>
+          <strong>{{ customers.length - activeCount }}</strong>
+          <span class="stat-note">Needs re-engagement</span>
+        </article>
+      </section>
+
+      <section class="directory-panel">
+        <div class="panel-heading">
+          <div>
+            <h2>Customer directory</h2>
+            <p>{{ visibleCustomers.length }} of {{ customers.length }} records showing</p>
+          </div>
+
+          <button class="refresh-button" type="button" (click)="loadCustomers()" [disabled]="isLoading">
+            Refresh
+          </button>
+        </div>
+
+        <div class="toolbar">
+          <label class="search-box">
+            <span>/</span>
+            <input [(ngModel)]="query" placeholder="Search name, email or phone" aria-label="Search customers">
+          </label>
+
+          <div class="filter-group">
+            <button
+              *ngFor="let filter of ['all', 'active', 'inactive']"
+              class="filter"
+              [class.active]="statusFilter === filter"
+              type="button"
+              (click)="statusFilter = $any(filter)"
+            >
+              {{ filter | titlecase }}
+            </button>
+          </div>
+        </div>
+
+        <div class="error-banner" *ngIf="error" role="alert">
+          <span>{{ error }}</span>
+          <button type="button" (click)="loadCustomers()">Retry</button>
+        </div>
+
+        <div class="loading-state" *ngIf="isLoading">
+          <span class="spinner"></span>
+          Loading customers...
+        </div>
+
+        <div class="empty-state" *ngIf="!isLoading && !visibleCustomers.length">
+          <span class="empty-mark">--</span>
+          <h3>No customers found</h3>
+          <p>Try changing your search or add your first customer.</p>
+        </div>
+
+        <div class="table-wrap" *ngIf="!isLoading && visibleCustomers.length">
+          <table>
+            <thead>
+              <tr>
+                <th>Customer</th>
+                <th>Phone</th>
+                <th>Address</th>
+                <th>Status</th>
+                <th>Added</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr *ngFor="let customer of visibleCustomers">
+                <td>
+                  <div class="customer-cell">
+                    <span class="avatar">{{ customer.name.slice(0, 1).toUpperCase() }}</span>
+                    <div>
+                      <strong>{{ customer.name }}</strong>
+                      <span>{{ customer.email }}</span>
+                    </div>
+                  </div>
+                </td>
+                <td>{{ customer.phone }}</td>
+                <td class="address-cell">{{ customer.address }}</td>
+                <td>
+                  <span
+                    class="status"
+                    [class.status-active]="customer.status === 'active'"
+                    [class.status-inactive]="customer.status === 'inactive'"
+                  >
+                    {{ customer.status }}
+                  </span>
+                </td>
+                <td>{{ formatDate(customer.createdDate) }}</td>
+                <td>
+                  <div class="row-actions">
+                    <button type="button" (click)="openEditForm(customer)">Edit</button>
+                    <button class="danger-link" type="button" (click)="deleteTarget = customer">Delete</button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>Clientory CRM</span>
+      <span>Customer data, made useful.</span>
+    </footer>
   </ng-template>
-  <div class="modal-backdrop" *ngIf="formOpen"><section class="modal" role="dialog" aria-modal="true"><div class="modal-heading"><div><p class="eyebrow">Customer record</p><h2>{{ editingCustomer ? 'Edit customer' : 'Add customer' }}</h2></div><button class="icon-button" type="button" (click)="formOpen = false">x</button></div><form [formGroup]="customerForm" (ngSubmit)="saveCustomer()" novalidate><div class="form-grid"><label class="field"><span>Full name</span><input formControlName="name" placeholder="e.g. Amara Perera"><small class="field-error" *ngIf="fieldInvalid('name')">Name is required.</small></label><label class="field"><span>Email address</span><input type="email" formControlName="email" placeholder="amara@example.com"><small class="field-error" *ngIf="fieldInvalid('email')">Enter a valid email.</small></label><label class="field"><span>Phone number</span><input formControlName="phone" placeholder="+94 77 123 4567"><small class="field-error" *ngIf="fieldInvalid('phone')">Phone is required.</small></label><label class="field"><span>Status</span><select formControlName="status"><option value="active">Active</option><option value="inactive">Inactive</option></select></label><label class="field field-wide"><span>Address</span><textarea formControlName="address" placeholder="Enter a full address" rows="3"></textarea><small class="field-error" *ngIf="fieldInvalid('address')">Address is required.</small></label></div><div class="modal-actions"><button class="button button-quiet" type="button" (click)="formOpen = false">Cancel</button><button class="button button-primary" type="submit" [disabled]="isSaving">{{ isSaving ? 'Saving...' : editingCustomer ? 'Save changes' : 'Create customer' }}</button></div></form></section></div>
-  <div class="modal-backdrop" *ngIf="deleteTarget"><section class="confirm-modal" role="dialog" aria-modal="true"><span class="warning-mark">!</span><h2>Delete customer?</h2><p>This will permanently remove <strong>{{ deleteTarget.name }}</strong> from your directory.</p><div class="modal-actions"><button class="button button-quiet" type="button" (click)="deleteTarget = null">Cancel</button><button class="button button-danger" type="button" (click)="confirmDelete()">Delete record</button></div></section></div>
+
+  <div class="modal-backdrop" *ngIf="formOpen">
+    <section class="modal" role="dialog" aria-modal="true">
+      <div class="modal-heading">
+        <div>
+          <p class="eyebrow">Customer record</p>
+          <h2>{{ editingCustomer ? 'Edit customer' : 'Add customer' }}</h2>
+        </div>
+
+        <button class="icon-button" type="button" (click)="formOpen = false">x</button>
+      </div>
+
+      <form [formGroup]="customerForm" (ngSubmit)="saveCustomer()" novalidate>
+        <div class="form-grid">
+          <label class="field">
+            <span>Full name</span>
+            <input formControlName="name" placeholder="e.g. Amara Perera">
+            <small class="field-error" *ngIf="fieldInvalid('name')">Name is required.</small>
+          </label>
+
+          <label class="field">
+            <span>Email address</span>
+            <input type="email" formControlName="email" placeholder="amara@example.com">
+            <small class="field-error" *ngIf="fieldInvalid('email')">Enter a valid email.</small>
+          </label>
+
+          <label class="field">
+            <span>Phone number</span>
+            <input type="tel" inputmode="numeric" maxlength="10" formControlName="phone" placeholder="10-digit phone number">
+            <small class="field-error" *ngIf="fieldInvalid('phone') && customerForm.controls.phone.hasError('required')">
+              Phone is required.
+            </small>
+            <small class="field-error" *ngIf="fieldInvalid('phone') && customerForm.controls.phone.hasError('pattern')">
+              Phone can only contain numbers and must contain exactly 10 digits.
+            </small>
+          </label>
+
+          <label class="field">
+            <span>Status</span>
+            <select formControlName="status">
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+          </label>
+
+          <label class="field field-wide">
+            <span>Address</span>
+            <textarea formControlName="address" placeholder="Enter a full address" rows="3"></textarea>
+            <small class="field-error" *ngIf="fieldInvalid('address')">Address is required.</small>
+          </label>
+        </div>
+
+        <div class="modal-actions">
+          <button class="button button-quiet" type="button" (click)="formOpen = false">Cancel</button>
+          <button class="button button-primary" type="submit" [disabled]="isSaving">
+            {{ isSaving ? 'Saving...' : editingCustomer ? 'Save changes' : 'Create customer' }}
+          </button>
+        </div>
+      </form>
+    </section>
+  </div>
+
+  <div class="modal-backdrop" *ngIf="deleteTarget">
+    <section class="confirm-modal" role="dialog" aria-modal="true">
+      <span class="warning-mark">!</span>
+      <h2>Delete customer?</h2>
+      <p>
+        This will permanently remove <strong>{{ deleteTarget.name }}</strong> from your directory.
+      </p>
+
+      <div class="modal-actions">
+        <button class="button button-quiet" type="button" (click)="deleteTarget = null">Cancel</button>
+        <button class="button button-danger" type="button" (click)="confirmDelete()">Delete record</button>
+      </div>
+    </section>
+  </div>
 </div>

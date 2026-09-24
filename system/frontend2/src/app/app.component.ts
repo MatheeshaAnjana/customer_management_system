@@ -33,7 +33,7 @@ export class AppComponent {
 
   customerForm = this.formBuilder.nonNullable.group({
     name: ['', Validators.required], email: ['', [Validators.required, Validators.email]],
-    phone: ['', Validators.required], address: ['', Validators.required], status: ['active' as CustomerStatus, Validators.required]
+    phone: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]], address: ['', Validators.required], status: ['active' as CustomerStatus, Validators.required]
   });
 
   get visibleCustomers(): Customer[] {
@@ -44,7 +44,9 @@ export class AppComponent {
 
   get activeCount(): number { return this.customers.filter((customer) => customer.status === 'active').length; }
 
-  ngOnInit(): void { if (this.isAuthenticated) this.loadCustomers(); }
+  ngOnInit(): void {
+    if (this.isAuthenticated) this.loadCustomers();
+  }
 
   toggleTheme(): void {
     this.theme = this.theme === 'light' ? 'dark' : 'light';
